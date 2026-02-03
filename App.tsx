@@ -17,61 +17,37 @@ import ContactPage from './pages/ContactPage.tsx';
 import AdminDashboard from './pages/AdminDashboard.tsx';
 
 const App: React.FC = () => {
-  const [siteData, setSiteData] = useState<SiteData | null>(null);
+  // 상태 초기화를 함수형 업데이트로 처리하여 로컬스토리지 데이터를 즉시 반영 (빈 화면 방지)
+  const [siteData, setSiteData] = useState<SiteData>(() => {
+    try {
+      const saved = localStorage.getItem('injung_site_data');
+      if (saved && saved !== 'undefined' && saved !== 'null') {
+        const parsed = JSON.parse(saved);
+        // 필수 데이터 구조가 살아있는지 최소한의 검증
+        if (parsed?.config?.companyName && Array.isArray(parsed?.services)) {
+          return parsed;
+        }
+      }
+    } catch (e) {
+      console.error("데이터 복구 실패, 초기 데이터로 시작합니다:", e);
+    }
+    return INITIAL_DATA;
+  });
+
   const [isAdmin, setIsAdmin] = useState(false);
 
+  // 데이터 변경 시 로컬스토리지 동기화
   useEffect(() => {
-    const loadData = () => {
-      try {
-        const saved = localStorage.getItem('injung_site_data');
-        if (!saved || saved === 'undefined' || saved === 'null') {
-          setSiteData(INITIAL_DATA);
-          return;
-        }
-        
-        const parsed = JSON.parse(saved);
-        // 필수 필드가 모두 있는지 엄격하게 검사
-        if (
-          parsed && 
-          parsed.config && 
-          parsed.config.slogan && 
-          Array.isArray(parsed.services) && 
-          Array.isArray(parsed.portfolio)
-        ) {
-          setSiteData(parsed);
-        } else {
-          // 구조가 다르면 초기화
-          setSiteData(INITIAL_DATA);
-        }
-      } catch (e) {
-        console.error("데이터 로드 중 오류 발생:", e);
-        setSiteData(INITIAL_DATA);
-      }
-    };
-
-    loadData();
-  }, []);
-
-  useEffect(() => {
-    if (siteData) {
+    try {
       localStorage.setItem('injung_site_data', JSON.stringify(siteData));
+    } catch (e) {
+      console.error("데이터 저장 실패:", e);
     }
   }, [siteData]);
 
   const updateSiteData = (newData: SiteData) => {
     setSiteData(newData);
   };
-
-  // 데이터 로딩 중이거나 필수 데이터가 없는 경우의 로딩 화면
-  if (!siteData || !siteData.config) {
-    return (
-      <div className="bg-black min-h-screen flex flex-col items-center justify-center text-white text-center p-6">
-        <div className="w-16 h-16 border-4 border-purple-600 border-t-transparent rounded-full animate-spin mb-6"></div>
-        <h2 className="text-2xl font-bold mb-2">인정E&C</h2>
-        <p className="text-gray-500">최상의 위생 솔루션을 불러오는 중입니다...</p>
-      </div>
-    );
-  }
 
   return (
     <Router>

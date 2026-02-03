@@ -5,11 +5,14 @@ import { ChevronRight, ArrowRight, ShieldCheck, Zap, Award } from 'lucide-react'
 import { Link } from 'react-router-dom';
 
 const HomePage: React.FC<{ data: SiteData }> = ({ data }) => {
-  // 방어 코드: 데이터가 비정상적인 경우 렌더링 중단 방지
-  if (!data || !data.config) return null;
+  // 데이터 안전성 확보
+  // Fix: config was inferred as {} because of '|| {}'. Using optional chaining instead to preserve type information.
+  const config = data?.config;
+  const services = data?.services || [];
+  const portfolio = data?.portfolio || [];
   
-  const { config, services, portfolio } = data;
-  const sloganText = config.slogan || "공간의 가치를 더하는 전문 위생 솔루션";
+  const sloganText = config?.slogan || "공간의 가치를 더하는 전문 위생 솔루션";
+  const sloganWords = typeof sloganText === 'string' ? sloganText.split(' ') : ["인정E&C"];
 
   return (
     <div className="w-full">
@@ -29,7 +32,7 @@ const HomePage: React.FC<{ data: SiteData }> = ({ data }) => {
             Premium Cleaning Solution
           </div>
           <h1 className="text-5xl md:text-8xl font-black mb-8 leading-tight tracking-tighter">
-            {sloganText.split(' ').map((word, i, arr) => (
+            {sloganWords.map((word, i, arr) => (
               <span key={i} className={i >= Math.floor(arr.length / 2) ? 'purple-gradient-text block md:inline' : 'block md:inline'}>
                 {word}{' '}
               </span>
@@ -67,7 +70,7 @@ const HomePage: React.FC<{ data: SiteData }> = ({ data }) => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {(services || []).map((service, idx) => (
+            {services.map((service, idx) => (
               <div key={service.id || idx} className="group relative overflow-hidden rounded-3xl glass border-white/5 h-[450px]">
                 <img 
                   src={service.imageUrl + "&w=800"} 
@@ -143,7 +146,7 @@ const HomePage: React.FC<{ data: SiteData }> = ({ data }) => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {(portfolio || []).slice(0, 3).map((item) => (
+            {portfolio.slice(0, 3).map((item) => (
               <div key={item.id} className="group cursor-pointer">
                 <div className="relative aspect-[4/3] overflow-hidden rounded-2xl mb-6 border border-white/5">
                   <img src={item.imageUrl + "&w=600"} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" alt={item.title} loading="lazy" />
