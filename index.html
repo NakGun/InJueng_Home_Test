@@ -31,7 +31,6 @@
             -webkit-text-fill-color: transparent;
         }
         
-        /* 기본 애니메이션 보강 */
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes slideInUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         @keyframes zoomIn { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
@@ -41,19 +40,10 @@
         .slide-in-from-bottom-4 { animation-name: slideInUp; }
         .zoom-in { animation-name: zoomIn; }
 
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #000;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #2D1B69;
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #8B5CF6;
-        }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #000; }
+        ::-webkit-scrollbar-thumb { background: #2D1B69; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #8B5CF6; }
     </style>
 <script type="importmap">
 {

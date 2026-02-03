@@ -1,20 +1,20 @@
 
 import React, { useState, useEffect } from 'react';
 import { HashRouter as Router, Routes, Route } from 'react-router-dom';
-import { INITIAL_DATA } from './constants';
-import { SiteData } from './types';
+import { INITIAL_DATA } from './constants.ts';
+import { SiteData } from './types.ts';
 
 // Components
-import Navbar from './components/Navbar';
-import Footer from './components/Footer';
+import Navbar from './components/Navbar.tsx';
+import Footer from './components/Footer.tsx';
 
 // Pages
-import HomePage from './pages/HomePage';
-import AboutPage from './pages/AboutPage';
-import ServicesPage from './pages/ServicesPage';
-import PortfolioPage from './pages/PortfolioPage';
-import ContactPage from './pages/ContactPage';
-import AdminDashboard from './pages/AdminDashboard';
+import HomePage from './pages/HomePage.tsx';
+import AboutPage from './pages/AboutPage.tsx';
+import ServicesPage from './pages/ServicesPage.tsx';
+import PortfolioPage from './pages/PortfolioPage.tsx';
+import ContactPage from './pages/ContactPage.tsx';
+import AdminDashboard from './pages/AdminDashboard.tsx';
 
 const App: React.FC = () => {
   const [siteData, setSiteData] = useState<SiteData>(() => {
@@ -22,7 +22,6 @@ const App: React.FC = () => {
       const saved = localStorage.getItem('injung_site_data');
       if (!saved || saved === 'undefined') return INITIAL_DATA;
       const parsed = JSON.parse(saved);
-      // 필수 데이터 구조가 있는지 확인
       if (!parsed.config || !parsed.services || !parsed.portfolio) return INITIAL_DATA;
       return parsed;
     } catch (e) {

@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { SiteData, PortfolioItem } from '../types';
+import { SiteData, PortfolioItem } from '../types.ts';
 import { 
   LayoutDashboard, Image as ImageIcon, Settings, Save, 
   Trash2, Plus, LogIn, ChevronRight, BarChart, Users, MessageSquare,
@@ -31,11 +31,8 @@ const AdminDashboard: React.FC<AdminProps> = ({ data, setData, isAuthenticated, 
   const handleSaveConfig = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSyncing(true);
-    
-    // 1. Local Storage 저장
     setData({ ...data });
 
-    // 2. Formspree를 통한 데이터 수집/백업 (선택적)
     try {
       await fetch('https://formspree.io/f/xaqbkqzw', {
         method: 'POST',
@@ -207,9 +204,6 @@ const AdminDashboard: React.FC<AdminProps> = ({ data, setData, isAuthenticated, 
                 {isSyncing ? <Loader2 size={24} className="animate-spin" /> : <Save size={24} />}
                 데이터 저장 및 클라우드 백업
               </button>
-              <p className="text-xs text-gray-500 flex items-center gap-2">
-                <CloudUpload size={14} /> 저장 시 지정된 Formspree로 설정 파일 스냅샷이 자동 백업됩니다.
-              </p>
             </form>
           </div>
         )}

@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { SiteData } from '../types';
+import { SiteData } from '../types.ts';
 import { ChevronRight, ArrowRight, ShieldCheck, Zap, Award } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -9,7 +9,6 @@ const HomePage: React.FC<{ data: SiteData }> = ({ data }) => {
 
   return (
     <div className="w-full">
-      {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
         <div className="absolute inset-0 z-0">
           <img 
@@ -52,7 +51,6 @@ const HomePage: React.FC<{ data: SiteData }> = ({ data }) => {
         </div>
       </section>
 
-      {/* Services Summary */}
       <section className="py-32 bg-neutral-950">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-20">
@@ -86,7 +84,6 @@ const HomePage: React.FC<{ data: SiteData }> = ({ data }) => {
         </div>
       </section>
 
-      {/* Features Section */}
       <section className="py-32 bg-black border-y border-white/5">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-20 items-center">
@@ -136,7 +133,6 @@ const HomePage: React.FC<{ data: SiteData }> = ({ data }) => {
         </div>
       </section>
 
-      {/* Portfolio CTA */}
       <section className="py-32 bg-neutral-950">
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">

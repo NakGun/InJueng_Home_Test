@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { SiteData } from '../types';
+import { SiteData } from '../types.ts';
 import { Instagram, Mail, Phone, MapPin } from 'lucide-react';
 import { Link } from 'react-router-dom';
 

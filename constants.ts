@@ -1,5 +1,5 @@
 
-import { SiteData } from './types';
+import { SiteData } from './types.ts';
 
 export const INITIAL_DATA: SiteData = {
   config: {

@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { SiteData } from '../types';
+import { SiteData } from '../types.ts';
 
 const PortfolioPage: React.FC<{ data: SiteData }> = ({ data }) => {
   const { portfolio } = data;

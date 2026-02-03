@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { SiteData } from '../types';
+import { SiteData } from '../types.ts';
 import { CheckCircle2 } from 'lucide-react';
 
 const ServicesPage: React.FC<{ data: SiteData }> = ({ data }) => {

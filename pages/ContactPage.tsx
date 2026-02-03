@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { SiteData } from '../types';
+import { SiteData } from '../types.ts';
 import { Phone, Mail, MapPin, Send, Instagram, ExternalLink, Loader2 } from 'lucide-react';
 
 const ContactPage: React.FC<{ data: SiteData }> = ({ data }) => {

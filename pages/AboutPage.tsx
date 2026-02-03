@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { SiteData } from '../types';
+import { SiteData } from '../types.ts';
 
 const AboutPage: React.FC<{ data: SiteData }> = ({ data }) => {
   const { config } = data;
