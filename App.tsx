@@ -17,31 +17,29 @@ import ContactPage from './pages/ContactPage.tsx';
 import AdminDashboard from './pages/AdminDashboard.tsx';
 
 const App: React.FC = () => {
-  // 상태 초기화를 함수형 업데이트로 처리하여 로컬스토리지 데이터를 즉시 반영 (빈 화면 방지)
+  // 상태 초기화 시 로컬 스토리지 데이터를 매우 보수적으로 확인
   const [siteData, setSiteData] = useState<SiteData>(() => {
     try {
       const saved = localStorage.getItem('injung_site_data');
       if (saved && saved !== 'undefined' && saved !== 'null') {
         const parsed = JSON.parse(saved);
-        // 필수 데이터 구조가 살아있는지 최소한의 검증
-        if (parsed?.config?.companyName && Array.isArray(parsed?.services)) {
+        // 필수 필드(config, services, portfolio)가 모두 존재하는지 검증
+        if (parsed && parsed.config && Array.isArray(parsed.services) && Array.isArray(parsed.portfolio)) {
           return parsed;
         }
       }
     } catch (e) {
-      console.error("데이터 복구 실패, 초기 데이터로 시작합니다:", e);
+      console.warn("Local storage data invalid, falling back to INITIAL_DATA.");
     }
     return INITIAL_DATA;
   });
 
   const [isAdmin, setIsAdmin] = useState(false);
 
-  // 데이터 변경 시 로컬스토리지 동기화
+  // 데이터 변경될 때만 로컬 스토리지 업데이트
   useEffect(() => {
-    try {
+    if (siteData) {
       localStorage.setItem('injung_site_data', JSON.stringify(siteData));
-    } catch (e) {
-      console.error("데이터 저장 실패:", e);
     }
   }, [siteData]);
 
@@ -53,7 +51,7 @@ const App: React.FC = () => {
     <Router>
       <div className="min-h-screen flex flex-col bg-black text-white selection:bg-purple-500 selection:text-white">
         <Navbar 
-          siteName={siteData.config.companyName || "인정E&C"} 
+          siteName={siteData?.config?.companyName || "인정E&C"} 
           isAdmin={isAdmin} 
           setIsAdmin={setIsAdmin} 
         />
@@ -76,6 +74,8 @@ const App: React.FC = () => {
                 />
               } 
             />
+            {/* 404 발생 시 홈으로 리다이렉트 (안전 장치) */}
+            <Route path="*" element={<HomePage data={siteData} />} />
           </Routes>
         </main>
 

@@ -5,8 +5,7 @@ import { ChevronRight, ArrowRight, ShieldCheck, Zap, Award } from 'lucide-react'
 import { Link } from 'react-router-dom';
 
 const HomePage: React.FC<{ data: SiteData }> = ({ data }) => {
-  // 데이터 안전성 확보
-  // Fix: config was inferred as {} because of '|| {}'. Using optional chaining instead to preserve type information.
+  // 데이터 안전성 확보 (Optional Chaining 및 기본값 설정)
   const config = data?.config;
   const services = data?.services || [];
   const portfolio = data?.portfolio || [];
