@@ -1,13 +1,8 @@
 
 import React, { useState, useEffect } from 'react';
-import { HashRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
-import { 
-  Menu, X, Home, Info, Briefcase, Image as ImageIcon, Phone, 
-  Settings, LogOut, ChevronRight, Wind, Building, ShieldCheck, 
-  Instagram, Search, Mail, MapPin, ExternalLink, Plus, Trash2, Edit2
-} from 'lucide-react';
+import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import { INITIAL_DATA } from './constants';
-import { SiteData, PortfolioItem, Service } from './types';
+import { SiteData } from './types';
 
 // Components
 import Navbar from './components/Navbar';
@@ -23,8 +18,17 @@ import AdminDashboard from './pages/AdminDashboard';
 
 const App: React.FC = () => {
   const [siteData, setSiteData] = useState<SiteData>(() => {
-    const saved = localStorage.getItem('injung_site_data');
-    return saved ? JSON.parse(saved) : INITIAL_DATA;
+    try {
+      const saved = localStorage.getItem('injung_site_data');
+      if (!saved || saved === 'undefined') return INITIAL_DATA;
+      const parsed = JSON.parse(saved);
+      // 필수 데이터 구조가 있는지 확인
+      if (!parsed.config || !parsed.services || !parsed.portfolio) return INITIAL_DATA;
+      return parsed;
+    } catch (e) {
+      console.error("Failed to load site data:", e);
+      return INITIAL_DATA;
+    }
   });
 
   const [isAdmin, setIsAdmin] = useState(false);
@@ -40,7 +44,11 @@ const App: React.FC = () => {
   return (
     <Router>
       <div className="min-h-screen flex flex-col bg-black text-white selection:bg-purple-500 selection:text-white">
-        <Navbar siteName={siteData.config.companyName} isAdmin={isAdmin} setIsAdmin={setIsAdmin} />
+        <Navbar 
+          siteName={siteData.config.companyName} 
+          isAdmin={isAdmin} 
+          setIsAdmin={setIsAdmin} 
+        />
         
         <main className="flex-grow">
           <Routes>
