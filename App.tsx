@@ -17,29 +17,33 @@ import ContactPage from './pages/ContactPage.tsx';
 import AdminDashboard from './pages/AdminDashboard.tsx';
 
 const App: React.FC = () => {
-  // 상태 초기화 시 로컬 스토리지 데이터를 매우 보수적으로 확인
+  // 상태 초기화 로직 최적화
   const [siteData, setSiteData] = useState<SiteData>(() => {
     try {
       const saved = localStorage.getItem('injung_site_data');
       if (saved && saved !== 'undefined' && saved !== 'null') {
         const parsed = JSON.parse(saved);
-        // 필수 필드(config, services, portfolio)가 모두 존재하는지 검증
-        if (parsed && parsed.config && Array.isArray(parsed.services) && Array.isArray(parsed.portfolio)) {
+        // 데이터 구조 검증
+        if (parsed && parsed.config && Array.isArray(parsed.services)) {
           return parsed;
         }
       }
     } catch (e) {
-      console.warn("Local storage data invalid, falling back to INITIAL_DATA.");
+      console.warn("Storage data corrupted, using defaults:", e);
     }
     return INITIAL_DATA;
   });
 
   const [isAdmin, setIsAdmin] = useState(false);
 
-  // 데이터 변경될 때만 로컬 스토리지 업데이트
+  // 데이터가 변경될 때만 로컬 스토리지에 저장
   useEffect(() => {
-    if (siteData) {
-      localStorage.setItem('injung_site_data', JSON.stringify(siteData));
+    try {
+      if (siteData) {
+        localStorage.setItem('injung_site_data', JSON.stringify(siteData));
+      }
+    } catch (e) {
+      console.error("Failed to persist data:", e);
     }
   }, [siteData]);
 
@@ -47,11 +51,16 @@ const App: React.FC = () => {
     setSiteData(newData);
   };
 
+  // 렌더링 시 siteData 가 존재하지 않을 경우를 대비한 최소한의 가드
+  if (!siteData || !siteData.config) {
+    return <div className="bg-black min-h-screen"></div>;
+  }
+
   return (
     <Router>
-      <div className="min-h-screen flex flex-col bg-black text-white selection:bg-purple-500 selection:text-white">
+      <div className="min-h-screen flex flex-col bg-black text-white selection:bg-purple-500 selection:text-white animate-fade-in">
         <Navbar 
-          siteName={siteData?.config?.companyName || "인정E&C"} 
+          siteName={siteData.config.companyName || "인정E&C"} 
           isAdmin={isAdmin} 
           setIsAdmin={setIsAdmin} 
         />
@@ -74,7 +83,7 @@ const App: React.FC = () => {
                 />
               } 
             />
-            {/* 404 발생 시 홈으로 리다이렉트 (안전 장치) */}
+            {/* Catch-all route to home */}
             <Route path="*" element={<HomePage data={siteData} />} />
           </Routes>
         </main>
