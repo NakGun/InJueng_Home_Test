@@ -5,9 +5,9 @@ export const INITIAL_DATA: SiteData = {
   config: {
     companyName: "인정E&C",
     slogan: "공간의 가치를 더하는 전문 위생 솔루션",
-    phone: "010-1234-5678",
-    email: "contact@injung-enc.com",
-    address: "서울특별시 강남구 테헤란로 123, 인정빌딩 7층",
+    phone: "010-3657-0526",
+    email: "ijeng725@gmail.com",
+    address: "경기도 성남시 중원구 산성대로 106, 3층 A389호",
     instagram: "https://instagram.com/injung_enc",
     blog: "https://blog.naver.com/injung_enc",
     history: [
