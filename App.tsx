@@ -19,18 +19,16 @@ const App: React.FC = () => {
   const [siteData, setSiteData] = useState<SiteData>(() => {
     try {
       const saved = localStorage.getItem('injung_site_data');
-      if (!saved || saved === 'undefined' || saved === 'null') return INITIAL_DATA;
-      
-      const parsed = JSON.parse(saved);
-      // 필수 데이터 구조가 올바른지 확인
-      if (!parsed || typeof parsed !== 'object' || !parsed.config || !parsed.services || !parsed.portfolio) {
-        return INITIAL_DATA;
+      if (saved && saved !== 'undefined' && saved !== 'null') {
+        const parsed = JSON.parse(saved);
+        if (parsed && parsed.config && parsed.services && parsed.portfolio) {
+          return parsed;
+        }
       }
-      return parsed;
     } catch (e) {
-      console.error("Failed to load site data:", e);
-      return INITIAL_DATA;
+      console.warn("Storage data loading failed, using defaults.");
     }
+    return INITIAL_DATA;
   });
 
   const [isAdmin, setIsAdmin] = useState(false);
@@ -45,21 +43,12 @@ const App: React.FC = () => {
     setSiteData(newData);
   };
 
-  // 데이터 가드: 필수 데이터가 없을 경우 로딩 화면 표시
-  if (!siteData || !siteData.config) {
-    return (
-      <div className="bg-black min-h-screen flex flex-col items-center justify-center text-white p-6 text-center">
-        <div className="w-12 h-12 border-4 border-purple-500 border-t-transparent rounded-full animate-spin mb-4"></div>
-        <p className="text-gray-400">인정E&C 데이터를 불러오는 중입니다...</p>
-      </div>
-    );
-  }
-
+  // 렌더링 가드를 제거하여 빈 화면이나 로딩 메시지 없이 바로 콘텐츠를 보여줍니다.
   return (
     <Router>
-      <div className="min-h-screen flex flex-col bg-black text-white selection:bg-purple-500 selection:text-white">
+      <div className="min-h-screen flex flex-col bg-black text-white selection:bg-purple-500 selection:text-white animate-in fade-in">
         <Navbar 
-          siteName={siteData.config.companyName || "인정E&C"} 
+          siteName={siteData.config?.companyName || "인정E&C"} 
           isAdmin={isAdmin} 
           setIsAdmin={setIsAdmin} 
         />

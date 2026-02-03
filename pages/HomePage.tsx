@@ -1,11 +1,14 @@
-
 import React from 'react';
 import { SiteData } from '../types.ts';
 import { ChevronRight, ArrowRight, ShieldCheck, Zap, Award } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const HomePage: React.FC<{ data: SiteData }> = ({ data }) => {
-  const { config, services, portfolio } = data;
+  const config = data?.config || { slogan: "공간의 가치를 더하는 전문 위생 솔루션" };
+  const services = data?.services || [];
+  const portfolio = data?.portfolio || [];
+
+  const sloganParts = (config.slogan || "").split(' ');
 
   return (
     <div className="w-full">
@@ -25,7 +28,7 @@ const HomePage: React.FC<{ data: SiteData }> = ({ data }) => {
             Premium Cleaning Solution
           </div>
           <h1 className="text-5xl md:text-8xl font-black mb-8 leading-tight tracking-tighter">
-            {config.slogan.split(' ').map((word, i) => (
+            {sloganParts.map((word, i) => (
               <span key={i} className={i >= 2 ? 'purple-gradient-text block md:inline' : 'block md:inline'}>
                 {word}{' '}
               </span>
@@ -51,6 +54,7 @@ const HomePage: React.FC<{ data: SiteData }> = ({ data }) => {
         </div>
       </section>
 
+      {/* Services Section */}
       <section className="py-32 bg-neutral-950">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-20">
@@ -70,7 +74,7 @@ const HomePage: React.FC<{ data: SiteData }> = ({ data }) => {
                   alt={service.title}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
-                <div className="absolute bottom-0 p-10">
+                <div className="absolute bottom-0 p-10 w-full">
                   <span className="text-purple-500 font-black text-6xl opacity-10 absolute top-[-20px] left-8">0{idx + 1}</span>
                   <h3 className="text-2xl font-bold mb-4">{service.title}</h3>
                   <p className="text-gray-400 mb-6 text-sm leading-relaxed">{service.description}</p>
@@ -84,6 +88,7 @@ const HomePage: React.FC<{ data: SiteData }> = ({ data }) => {
         </div>
       </section>
 
+      {/* Why Us Section */}
       <section className="py-32 bg-black border-y border-white/5">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-20 items-center">
@@ -122,10 +127,10 @@ const HomePage: React.FC<{ data: SiteData }> = ({ data }) => {
               </div>
             </div>
             <div className="relative group">
-              <div className="absolute -inset-4 bg-purple-600/20 rounded-[40px] blur-2xl group-hover:bg-purple-600/30 transition-all" />
+              <div className="absolute -inset-4 bg-purple-600/20 rounded-[40px] blur-2xl group-hover:bg-purple-600/30 transition-all duration-500" />
               <img 
                 src="https://images.unsplash.com/photo-1581578731548-c64695ce6958?q=80&w=2070&auto=format&fit=crop" 
-                className="relative rounded-[40px] border border-white/10 shadow-2xl transition-transform duration-500 group-hover:-translate-y-2"
+                className="relative rounded-[40px] border border-white/10 shadow-2xl transition-transform duration-500 group-hover:-translate-y-2 w-full object-cover"
                 alt="Pro Service"
               />
             </div>
@@ -133,6 +138,7 @@ const HomePage: React.FC<{ data: SiteData }> = ({ data }) => {
         </div>
       </section>
 
+      {/* Portfolio Section */}
       <section className="py-32 bg-neutral-950">
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
@@ -154,7 +160,7 @@ const HomePage: React.FC<{ data: SiteData }> = ({ data }) => {
                     <span className="bg-white text-black px-6 py-2 rounded-full font-bold text-sm">자세히 보기</span>
                   </div>
                   <div className="absolute top-4 left-4">
-                    <span className="glass px-3 py-1 rounded-md text-xs font-bold text-purple-400">{item.category}</span>
+                    <span className="glass px-3 py-1 rounded-md text-xs font-bold text-purple-400 border-purple-500/30">{item.category}</span>
                   </div>
                 </div>
                 <h4 className="text-xl font-bold mb-2 group-hover:text-purple-400 transition-colors">{item.title}</h4>
