@@ -5,7 +5,6 @@ export interface Service {
   description: string;
   icon: string;
   imageUrl: string;
-  features: string[];
 }
 
 export interface PortfolioItem {

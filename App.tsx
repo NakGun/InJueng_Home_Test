@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import { INITIAL_DATA } from './constants.ts';
@@ -17,33 +16,28 @@ import ContactPage from './pages/ContactPage.tsx';
 import AdminDashboard from './pages/AdminDashboard.tsx';
 
 const App: React.FC = () => {
-  // 상태 초기화 로직 최적화
   const [siteData, setSiteData] = useState<SiteData>(() => {
     try {
       const saved = localStorage.getItem('injung_site_data');
-      if (saved && saved !== 'undefined' && saved !== 'null') {
-        const parsed = JSON.parse(saved);
-        // 데이터 구조 검증
-        if (parsed && parsed.config && Array.isArray(parsed.services)) {
-          return parsed;
-        }
+      if (!saved || saved === 'undefined' || saved === 'null') return INITIAL_DATA;
+      
+      const parsed = JSON.parse(saved);
+      // 필수 데이터 구조가 올바른지 확인
+      if (!parsed || typeof parsed !== 'object' || !parsed.config || !parsed.services || !parsed.portfolio) {
+        return INITIAL_DATA;
       }
+      return parsed;
     } catch (e) {
-      console.warn("Storage data corrupted, using defaults:", e);
+      console.error("Failed to load site data:", e);
+      return INITIAL_DATA;
     }
-    return INITIAL_DATA;
   });
 
   const [isAdmin, setIsAdmin] = useState(false);
 
-  // 데이터가 변경될 때만 로컬 스토리지에 저장
   useEffect(() => {
-    try {
-      if (siteData) {
-        localStorage.setItem('injung_site_data', JSON.stringify(siteData));
-      }
-    } catch (e) {
-      console.error("Failed to persist data:", e);
+    if (siteData) {
+      localStorage.setItem('injung_site_data', JSON.stringify(siteData));
     }
   }, [siteData]);
 
@@ -51,14 +45,19 @@ const App: React.FC = () => {
     setSiteData(newData);
   };
 
-  // 렌더링 시 siteData 가 존재하지 않을 경우를 대비한 최소한의 가드
+  // 데이터 가드: 필수 데이터가 없을 경우 로딩 화면 표시
   if (!siteData || !siteData.config) {
-    return <div className="bg-black min-h-screen"></div>;
+    return (
+      <div className="bg-black min-h-screen flex flex-col items-center justify-center text-white p-6 text-center">
+        <div className="w-12 h-12 border-4 border-purple-500 border-t-transparent rounded-full animate-spin mb-4"></div>
+        <p className="text-gray-400">인정E&C 데이터를 불러오는 중입니다...</p>
+      </div>
+    );
   }
 
   return (
     <Router>
-      <div className="min-h-screen flex flex-col bg-black text-white selection:bg-purple-500 selection:text-white animate-fade-in">
+      <div className="min-h-screen flex flex-col bg-black text-white selection:bg-purple-500 selection:text-white">
         <Navbar 
           siteName={siteData.config.companyName || "인정E&C"} 
           isAdmin={isAdmin} 
@@ -83,8 +82,6 @@ const App: React.FC = () => {
                 />
               } 
             />
-            {/* Catch-all route to home */}
-            <Route path="*" element={<HomePage data={siteData} />} />
           </Routes>
         </main>
 
